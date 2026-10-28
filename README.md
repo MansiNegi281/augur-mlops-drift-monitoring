@@ -1,63 +1,99 @@
 End-to-End MLOps Pipeline for Data Drift Detection and Model Monitoring
 
-1. Project Overview
+An end-to-end MLOps project demonstrating machine learning model training, experiment tracking, data drift detection, REST API deployment, automated testing, and Docker containerization.
 
-This project demonstrates an end-to-end Machine Learning Operations (MLOps) workflow for training a machine learning model, tracking experiments, monitoring data drift, serving predictions through an API, testing endpoints, and packaging the application with Docker.
+GitHub Repository: augur-mlops-drift-monitoring
 
-The project demonstrates how monitoring can help identify changes in incoming data distributions that may affect machine learning systems. It is a student implementation inspired by research on production machine learning monitoring and does not claim to reproduce a specific research paper.
+⸻
 
-2. Objectives
+Table of Contents
+
+* Project Overview
+* Objectives
+* Technologies Used
+* Dataset and Model
+* System Architecture
+* Project Structure
+* Installation and Setup
+* Running the Project
+* Data Drift Monitoring
+* Model Evaluation Results
+* API Testing
+* Docker Deployment
+* Screenshots
+* Limitations
+* Future Scope
+* Conclusion
+
+Project Overview
+
+This project implements an end-to-end Machine Learning Operations (MLOps) workflow for training, evaluating, monitoring, and deploying a machine learning model.
+
+The project explores how data drift monitoring can help identify changes in incoming data distributions. It uses Evidently to compare reference data with current data and demonstrates feature-level drift detection through an intentionally modified dataset.
+
+The application also integrates MLflow for experiment tracking, FastAPI for model serving, pytest for automated testing, and Docker for containerized deployment.
+
+This is an educational implementation inspired by production MLOps practices. It does not claim to reproduce a specific research paper.
+
+Objectives
 
 * Train and evaluate a machine learning classification model.
 * Track model parameters and evaluation metrics using MLflow.
-* Compare reference data with current data using Evidently.
-* Simulate data drift by deliberately shifting a feature’s values.
+* Monitor data distributions using Evidently.
+* Simulate data drift by deliberately shifting a feature.
+* Generate HTML reports for baseline and simulated drift experiments.
 * Serve predictions through a FastAPI REST API.
-* Validate API behavior with automated tests.
+* Validate API endpoints and input handling with automated tests.
 * Containerize the prediction service using Docker.
 
-3. Technologies Used
+Technologies Used
 
-* Language: Python
-* Data processing: pandas, NumPy
-* Machine learning: scikit-learn
-* Experiment tracking: MLflow
-* Data drift monitoring: Evidently
-* API development: FastAPI
-* Testing: pytest
-* Containerization: Docker
+Category	Technologies
+Programming Language	Python
+Data Processing	pandas, NumPy
+Machine Learning	scikit-learn
+Experiment Tracking	MLflow
+Data Drift Monitoring	Evidently
+API Development	FastAPI
+Automated Testing	pytest
+Model Serialization	Joblib
+Containerization	Docker
+Version Control	Git, GitHub
 
-4. Dataset and Model
+Dataset and Model
 
 The project uses the Breast Cancer Wisconsin dataset available through scikit-learn.
 
 A Random Forest classifier is trained using an 80/20 train-test split with stratification and a fixed random seed.
 
-Model Evaluation Results
+The trained model is serialized and saved for use by the prediction API.
+
+Model Evaluation Metrics
 
 Metric	Result
 Accuracy	0.9561
 F1-score	0.9655
 
-These metrics represent the recorded experiment and are not a guarantee of performance on unseen production data.
+These values represent the recorded training and evaluation experiment. They are not a guarantee of performance on future or production data.
 
-5. System Architecture
+System Architecture
 
 The project follows this workflow:
 
-1. Data loading: Load the Breast Cancer Wisconsin dataset.
-2. Model training: Split the data into training and testing sets and train a Random Forest classifier.
-3. Experiment tracking: Record model parameters and evaluation metrics using MLflow.
-4. Reference data storage: Save the reference dataset for monitoring.
-5. Drift monitoring: Compare reference data with a sample of current data using Evidently.
-6. Drift simulation: Add 100 to every value of the mean radius feature and generate a second report.
-7. API serving: Load the trained model and expose prediction endpoints using FastAPI.
-8. Automated testing: Test API availability, valid predictions, missing features, and unexpected features.
-9. Containerization: Package the API, model, and runtime dependencies into a Docker image.
+1. Data Loading: Load the Breast Cancer Wisconsin dataset.
+2. Model Training: Split the dataset into training and testing sets and train a Random Forest classifier.
+3. Experiment Tracking: Log model parameters and evaluation metrics using MLflow.
+4. Reference Data Storage: Save reference data for subsequent monitoring.
+5. Data Drift Monitoring: Compare reference data with a sample of current data using Evidently.
+6. Drift Simulation: Add 100 to every value of the mean radius feature to simulate a distribution shift.
+7. Report Generation: Generate baseline and simulated drift HTML reports.
+8. API Development: Serve predictions through FastAPI.
+9. Automated Testing: Test API availability, valid predictions, and input validation.
+10. Containerization: Package the prediction service and its dependencies into a Docker image.
 
-6. Project Structure
+Project Structure
 
-augur-mlops-project/
+augur-mlops-drift-monitoring/
 ├── src/
 │   ├── train.py
 │   ├── monitor.py
@@ -68,6 +104,12 @@ augur-mlops-project/
 ├── reports/
 │   ├── baseline_report.html
 │   └── drift_report.html
+├── screenshots/
+│   ├── baseline_drift.png
+│   ├── simulated_drift.png
+│   ├── feature_drift_detection.png
+│   ├── local_api_prediction.png
+│   └── docker_api_prediction.png
 ├── tests/
 │   └── test_api.py
 ├── mlruns/
@@ -77,149 +119,205 @@ augur-mlops-project/
 ├── README.md
 └── .gitignore
 
-7. Installation and Setup
+Note: The screenshot filenames above are suggested names. Make sure they match the files you actually save in your screenshots/ folder. The venv/ directory is excluded from the repository.
+
+Installation and Setup
 
 Prerequisites
 
 * Python 3.9 or a compatible Python version supported by the project dependencies.
-* Docker, if you want to run the containerized API.
+* Git.
+* Docker, if you want to run the containerized application.
 
-Set up the Python environment
+1. Clone the Repository
 
-Clone the repository and enter the project directory:
+git clone https://github.com/MansiNegi281/augur-mlops-drift-monitoring.git
+cd augur-mlops-drift-monitoring
 
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-cd augur-mlops-project
-
-Create and activate a virtual environment:
+2. Create a Virtual Environment
 
 python3 -m venv venv
 source venv/bin/activate
 
-Install the dependencies:
+3. Install Dependencies
 
 pip install -r requirements.txt
 
-Use the project’s pinned dependency versions if they are specified in requirements.txt.
+Use the dependency versions specified in the project requirements files.
 
-8. Running the Project
+Running the Project
 
-Train the model
+1. Train the Model
 
 python src/train.py
 
-This trains the classifier, logs the experiment, and saves the model and reference data.
+This script trains the Random Forest classifier, evaluates its performance, logs the experiment, and saves the trained model and reference data.
 
-Generate drift reports
+2. Generate Data Drift Reports
 
 python src/monitor.py
 
-The script generates two HTML reports:
+The script generates two reports:
 
 * reports/baseline_report.html
 * reports/drift_report.html
 
-Open the reports on macOS:
+On macOS, open the reports using:
 
 open reports/baseline_report.html
 open reports/drift_report.html
 
-Run the FastAPI application
+3. Run the FastAPI Application
 
 uvicorn src.api:app --reload
 
-Open the interactive API documentation at:
+Open the interactive API documentation:
 
 http://127.0.0.1:8000/docs
 
-The API provides a home endpoint and a prediction endpoint. Use the interactive documentation to inspect the request schema and test predictions.
+Use the documentation to inspect the available endpoints and submit prediction requests.
 
-9. Data Drift Monitoring Results
-
-Two monitoring experiments were performed.
-
-Experiment 1: Baseline Monitoring
-
-The reference dataset was compared with a sample of 200 rows from the same dataset, without intentionally modifying its feature values.
-
-The generated baseline report showed:
-
-* 30 monitored columns.
-* 0 drifted columns.
-* 0% share of drifted columns.
-* Overall dataset drift not detected.
-
-Experiment 2: Simulated Feature Drift
-
-The mean radius feature was deliberately modified by adding 100 to every value in the current dataset.
-
-Measurement	Result
-Original mean of mean radius	14.0978
-Modified mean of mean radius	114.0978
-Mean increase	100.0000
-Total monitored columns	30
-Drifted columns	1
-Share of drifted columns	3.33%
-
-The feature-level report marked mean radius as Detected.
-
-However, the overall dataset drift status remained Not Detected, because the report’s configured dataset-level threshold was 0.5 (50%), while only 1 out of 30 columns was flagged.
-
-This experiment demonstrates why feature-level drift results and an overall dataset-level drift decision should be interpreted separately.
-
-The experiment uses an artificial shift to validate monitoring behavior; it does not establish that real-world data has drifted.
-
-10. API Testing Results
-
-Automated tests were run using:
+4. Run Automated Tests
 
 python -m pytest -v
 
-All four tests passed:
+The tests validate the API endpoints and input handling.
 
-Test	Result
+Data Drift Monitoring
+
+Data drift occurs when the distribution of incoming data differs from the distribution of the reference data used during model development.
+
+This project uses Evidently to compare reference data with current data and generate HTML monitoring reports.
+
+Experiment 1: Baseline Monitoring
+
+The reference dataset was compared with a sample of 200 rows without intentionally modifying its feature values.
+
+The generated report showed:
+
+Measurement	Result
+Reference dataset size	455 rows
+Current dataset size	200 rows
+Monitored features	30
+Drifted features	0
+Share of drifted features	0%
+Overall dataset drift	Not detected
+
+Experiment 2: Simulated Feature Drift
+
+To test the monitoring system, the mean radius feature was deliberately modified by adding 100 to each value in the current dataset.
+
+The resulting feature means were:
+
+Measurement	Result
+Original mean	14.0978
+Modified mean	114.0978
+Mean increase	100.0000
+Total monitored features	30
+Drifted features	1
+Share of drifted features	3.33%
+mean radius status	Detected
+Overall dataset drift	Not detected
+
+The feature-level report identified mean radius as drifted.
+
+The overall dataset-level status remained Not Detected because the configured threshold was 0.5 (50%), while only 1 of the 30 features was flagged.
+
+This demonstrates the distinction between detecting drift in an individual feature and triggering an overall dataset-level drift decision.
+
+The shift was artificially introduced to validate the monitoring workflow. It does not demonstrate that real-world production data has drifted.
+
+Model Evaluation Results
+
+The recorded model evaluation metrics were:
+
+Metric	Score
+Accuracy	95.61%
+F1-score	96.55%
+
+Accuracy measures the proportion of predictions that were correct. The F1-score combines precision and recall into a single metric.
+
+These scores describe the recorded experiment and should be interpreted in the context of its dataset, split, and evaluation configuration.
+
+API Testing
+
+Automated tests were executed using pytest.
+
+python -m pytest -v
+
+Test Results
+
+Test Case	Result
 Home endpoint	Passed
 Valid prediction	Passed
 Missing feature validation	Passed
 Unexpected feature validation	Passed
 
-Total: 4 passed, 0 failed.
+Summary: 4 tests passed, 0 failed.
 
-11. Docker Deployment
+Docker Deployment
 
-The API was packaged into the Docker image augur-mlops-api:latest.
+The FastAPI application was packaged into the Docker image:
 
-A container named augur-mlops-container was started with port mapping 8001:8000.
+augur-mlops-api:latest
 
-The containerized API documentation is available at:
+A container named augur-mlops-container was run with the following port mapping:
+
+8001:8000
+
+This maps port 8001 on the host machine to port 8000 inside the container.
+
+Run the Container
+
+docker run -d --name augur-mlops-container -p 8001:8000 augur-mlops-api:latest
+
+Access the Containerized API
+
+Open:
 
 http://127.0.0.1:8001/docs
 
-Use the interactive documentation to submit a valid prediction request.
+Use the interactive documentation to test the prediction endpoint.
 
-12. Screenshots and Implementation Evidence
+If the container is already running, do not start another container with the same name.
 
-Include screenshots demonstrating:
+Screenshots
 
-1. Baseline drift report.
-2. Simulated drift report.
+The screenshots/ directory contains implementation evidence, including:
+
+1. Baseline data drift report.
+2. Simulated data drift report.
 3. Feature-level detection for mean radius.
 4. Successful local API prediction.
 5. Successful Docker-hosted API prediction.
 
-Store the screenshots in a project folder named screenshots/ and include them in the final submission or repository if required.
+The screenshots demonstrate the monitoring results and API deployment workflow.
 
-13. Limitations
+Limitations
 
-* The drift experiment uses an artificially shifted feature rather than naturally occurring production drift.
-* The overall dataset drift decision depends on the configured detection threshold.
-* Model evaluation results are based on a single recorded experiment and do not guarantee future performance.
-* The project demonstrates a monitoring workflow but does not establish continuous production monitoring or automatic model retraining.
+* The drift experiment uses an artificial feature shift rather than naturally occurring production drift.
+* The overall dataset-level drift decision depends on the configured threshold.
+* Model evaluation results do not guarantee performance on unseen production data.
+* The project demonstrates a monitoring workflow but does not implement continuous production monitoring or automatic model retraining.
+* The API and monitoring workflow have been tested locally and through Docker, but this does not establish production-scale reliability.
 
-14. Conclusion
+Future Scope
 
-This project demonstrates a practical MLOps workflow combining model training, experiment tracking, data drift monitoring, API-based prediction, automated testing, and Docker containerization.
+Potential improvements include:
 
-The simulated drift experiment successfully identified the deliberately modified mean radius feature. The project also passed all four automated API tests and demonstrated local and containerized API deployment.
+* Scheduled data drift monitoring.
+* Automated alerts when important features drift.
+* Model versioning and experiment comparison.
+* Monitoring prediction quality as ground-truth labels become available.
+* CI/CD pipelines for automated testing and deployment.
+* Automated model retraining and validation.
+* Deployment to a cloud environment.
+* Additional monitoring experiments involving different drift patterns.
 
-The implementation provides a foundation for exploring more advanced MLOps practices, including scheduled monitoring, alerting, model versioning, and automated retraining.
+Conclusion
+
+This project demonstrates an end-to-end MLOps workflow combining model training, experiment tracking, data drift monitoring, API-based predictions, automated testing, and Docker containerization.
+
+The simulated drift experiment successfully identified the deliberately modified mean radius feature, and all four automated API tests passed.
+
+The implementation provides a foundation for further exploration of production-oriented MLOps practices, including continuous monitoring, alerting, model versioning, and automated retraining.
