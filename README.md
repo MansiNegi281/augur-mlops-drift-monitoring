@@ -345,7 +345,33 @@ Use the interactive documentation to test the prediction endpoint.
 
 ## Screenshots
 
-The `screenshots/` directory should contain screenshots demonstrating the implementation and results.
+### 1. Baseline Data Drift Report
+
+![Baseline Data Drift Report](screenshots/baseline_drift.png)
+
+### 2. Simulated Data Drift Report
+
+![Simulated Data Drift Report](screenshots/simulated_drift.png)
+
+### 3. Local FastAPI Prediction
+
+![Local API Prediction](screenshots/local_api_prediction.png)
+
+### 4. Additional Local API Prediction
+
+![Additional Local API Prediction](screenshots/local_api_prediction2.png)
+
+### 5. Additional Local API Prediction
+
+![Additional Local API Prediction](screenshots/local_api_prediction3.png)
+
+### 6. Docker Deployment
+
+![Docker API Prediction](screenshots/docker_api_prediction.png)
+
+### 7. Additional Docker Deployment Screenshot
+
+![Docker API Prediction](screenshots/docker_api_prediction2.png)
 
 Recommended screenshots:
 
